@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Crear nuevo usuario{% endblock %}
+
+{% block content %}
+<div class="ev-page" style="padding: 2rem 1rem;">
+    <div class="ev-card"
+         style="max-width: 640px; margin: 0 auto; background: #fff; padding: 2rem 2.5rem;
+                border-radius: 0.75rem; box-shadow: 0 10px 25px rgba(15,23,42,0.12);">
+
+        <h1 style="margin-top: 0; margin-bottom: 0.5rem;">Crear nuevo usuario</h1>
+        <p style="margin-top: 0; color: #4b5563;">
+            Completa los datos del usuario y selecciona el rol:
+            <strong>Vecino</strong>, <strong>Moderador</strong> o <strong>Administrador</strong>.
+        </p>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="ev-form-group" style="margin-bottom: 1rem;">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+
+            <div class="ev-form-group" style="margin-bottom: 1rem;">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+
+            <div class="ev-form-group" style="margin-bottom: 1rem;">
+                {{ form.fecha_nacimiento.label_tag }}
+                {{ form.fecha_nacimiento }}
+                {{ form.fecha_nacimiento.errors }}
+                <p style="font-size: 0.85rem; color: #6b7280; margin: 0.25rem 0 0;">
+                    Esta fecha se utiliza para validar si el usuario puede inscribirse
+                    en eventos solo para <strong>mayores de 18 años</strong>.
+                </p>
+            </div>
+
+            <div class="ev-form-group" style="margin-bottom: 1rem;">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+            </div>
+
+            <div class="ev-form-group" style="margin-bottom: 1rem;">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </div>
+
+            <div class="ev-form-group" style="margin-bottom: 1rem;">
+                {{ form.rol.label_tag }}
+                {{ form.rol }}
+                {{ form.rol.errors }}
+                <ul style="font-size: 0.85rem; color: #6b7280; padding-left: 1.25rem; margin-top: 0.4rem;">
+                    <li><strong>Vecino</strong>: sin permisos especiales.</li>
+                    <li><strong>Moderador</strong>: puede administrar eventos.</li>
+                    <li><strong>Administrador</strong>: permisos completos.</li>
+                </ul>
+            </div>
+
+            <div class="ev-form-group" style="margin-bottom: 1.25rem;">
+                <label style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                    {{ form.is_active }}
+                    <span>{{ form.is_active.label }}</span>
+                </label>
+                {{ form.is_active.errors }}
+            </div>
+
+            <div class="ev-form-actions"
+                 style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+                <button type="submit"
+                        class="ev-btn ev-btn-primary"
+                        style="background: #facc15; border: none; padding: 0.55rem 1.4rem;
+                               border-radius: 999px; font-weight: 600; cursor: pointer;">
+                    Guardar usuario
+                </button>
+
+                <a href="{% url 'events:panel_admin' %}"
+                   class="ev-btn-link"
+                   style="color: #2563eb; text-decoration: none;">
+                    Cancelar y volver al panel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

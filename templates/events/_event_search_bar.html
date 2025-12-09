@@ -1,0 +1,78 @@
+<form method="get"
+      class="w3-card w3-round-xlarge w3-padding-large w3-margin-top nv-search-shell">
+
+  <div class="w3-row-padding">
+
+    <!-- BUSCADOR PRINCIPAL -->
+    <div class="w3-col l6 m6 s12 w3-margin-bottom">
+      <label class="nv-label">Buscar eventos</label>
+      <div class="nv-input-group">
+        <span class="nv-input-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <input type="text"
+               name="q"
+               value="{{ q|default:'' }}"
+               placeholder="Buscar por título, descripción..."
+               class="w3-input">
+        {% if q %}
+          <a href="{% url 'events:listar' %}"
+             class="nv-input-clear"
+             title="Limpiar búsqueda">
+            <i class="fa fa-times"></i>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- LOCALIDAD -->
+    <div class="w3-col l3 m6 s12 w3-margin-bottom">
+      <label class="nv-label">Localidad</label>
+      <select name="localidad" class="w3-select w3-round-large">
+        <option value="">Todas</option>
+        {% for loc in localidades %}
+          <option value="{{ loc }}"
+                  {% if localidad == loc %}selected{% endif %}>
+            {{ loc }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- SOLO CON CUPOS + BOTONES -->
+    <div class="w3-col l3 m12 s12 w3-margin-bottom">
+      <label class="nv-label">Filtros</label>
+      <div class="w3-row-padding w3-padding-small">
+
+        <div class="w3-col s12 w3-margin-bottom">
+          <label class="nv-switch-label">
+            <span class="nv-switch">
+              <input type="checkbox"
+                     name="con_cupos"
+                     value="1"
+                     {% if con_cupos %}checked{% endif %}>
+              <span class="nv-slider"></span>
+            </span>
+            <span class="w3-small">Solo eventos con cupos</span>
+          </label>
+        </div>
+
+        <div class="w3-col s6">
+          <button type="submit"
+                  class="w3-button w3-theme w3-round-large w3-small w3-block">
+            <i class="fa fa-filter"></i> Filtrar
+          </button>
+        </div>
+
+        <div class="w3-col s6">
+          <a href="{% url 'events:listar' %}"
+             class="w3-button w3-white w3-border w3-round-large w3-small w3-block">
+            Limpiar
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</form>

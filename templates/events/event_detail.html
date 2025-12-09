@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ evento.titulo }} | Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    .ev-detail-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .ev-detail-layout {
+        width: 100%;
+        max-width: 1080px;
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+        gap: 22px;
+    }
+
+    @media (max-width: 900px) {
+        .ev-detail-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .ev-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 22px 22px 18px;
+        box-shadow:
+            0 18px 45px rgba(15, 23, 42, 0.08),
+            0 0 0 1px rgba(148, 163, 184, 0.35);
+    }
+
+    .ev-event-header {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .ev-event-cover {
+        width: 120px;
+        height: 120px;
+        border-radius: 20px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #f9fafb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: #9ca3af;
+    }
+
+    .ev-event-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .ev-event-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 6px;
+    }
+
+    .ev-badges-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .ev-badge {
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 11px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+        color: #4b5563;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .ev-badge--estado-aprobado {
+        background: #ecfdf5;
+        color: #15803d;
+        border-color: #bbf7d0;
+    }
+
+    .ev-badge--estado-pendiente {
+        background: #fffbeb;
+        color: #92400e;
+        border-color: #fde68a;
+    }
+
+    .ev-badge--estado-rechazado {
+        background: #fef2f2;
+        color: #b91c1c;
+        border-color: #fecaca;
+    }
+
+    .ev-badge--18 {
+        background: #fef2f2;
+        color: #b91c1c;
+        border-color: #fecaca;
+    }
+
+    .ev-meta-list {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #4b5563;
+    }
+
+    .ev-meta-list div {
+        margin-bottom: 2px;
+    }
+
+    .ev-section-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+        margin: 12px 0 6px;
+    }
+
+    .ev-text {
+        font-size: 13px;
+        color: #4b5563;
+        line-height: 1.5;
+        white-space: pre-line;
+    }
+
+    /* Card entradas / compra */
+    .ev-ticket-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .ev-ticket-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .ev-ticket-desc {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .ev-ticket-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 8px;
+    }
+
+    .ev-ticket-table th {
+        text-align: left;
+        padding: 6px 8px;
+        background: #f9fafb;
+        color: #6b7280;
+        font-weight: 500;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .ev-ticket-table td {
+        padding: 8px 8px;
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: middle;
+    }
+
+    .ev-input {
+        width: 100%;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        padding: 6px 10px;
+        font-size: 13px;
+        outline: none;
+        background: #f9fafb;
+        transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .ev-input:focus {
+        border-color: #f59e0b;
+        background: #ffffff;
+        box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.35);
+    }
+
+    .ev-ticket-footer {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .ev-ticket-footer strong {
+        color: #111827;
+    }
+
+    .ev-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 9px 18px;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, color 0.12s ease;
+        white-space: nowrap;
+    }
+
+    .ev-btn-primary {
+        background: #fbbf24;
+        color: #78350f;
+        box-shadow: 0 10px 24px rgba(245, 158, 11, 0.55);
+    }
+
+    .ev-btn-primary:hover {
+        background: #f59e0b;
+        transform: translateY(-1px);
+    }
+
+    .ev-btn-disabled {
+        background: #e5e7eb;
+        color: #9ca3af;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    .ev-small-note {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 4px;
+    }
+
+    .ev-highlight {
+        font-weight: 600;
+        color: #111827;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ev-detail-wrapper">
+    <div class="ev-detail-layout">
+
+        <!-- Columna izquierda: información del evento -->
+        <article class="ev-card">
+            <header class="ev-event-header">
+                <div class="ev-event-cover">
+                    {% if evento.imagen %}
+                        <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
+                    {% else %}
+                        Sin imagen
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h1 class="ev-event-title">{{ evento.titulo }}</h1>
+
+                    <div class="ev-badges-row">
+                        {# estado del evento #}
+                        {% if evento.estado == "aprobado" %}
+                            <span class="ev-badge ev-badge--estado-aprobado">
+                                Aprobado
+                            </span>
+                        {% elif evento.estado == "pendiente" %}
+                            <span class="ev-badge ev-badge--estado-pendiente">
+                                Pendiente de aprobación
+                            </span>
+                        {% else %}
+                            <span class="ev-badge ev-badge--estado-rechazado">
+                                Rechazado
+                            </span>
+                        {% endif %}
+
+                        {# tiempo #}
+                        <span class="ev-badge">
+                            {{ evento.texto_tiempo }}
+                        </span>
+
+                        {# +18 #}
+                        {% if evento.solo_mayores_18 %}
+                            <span class="ev-badge ev-badge--18">
+                                Solo mayores de 18 años
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="ev-meta-list">
+                        {% if evento.fecha_inicio %}
+                            <div>
+                                <strong>Fecha:</strong>
+                                {{ evento.fecha_inicio|date:"d/m/Y" }}
+                                {% if evento.fecha_termino and evento.fecha_termino != evento.fecha_inicio %}
+                                    – {{ evento.fecha_termino|date:"d/m/Y" }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {% if evento.hora_inicio %}
+                            <div>
+                                <strong>Hora:</strong>
+                                {{ evento.hora_inicio|time:"H:i" }}
+                                {% if evento.hora_termino %}
+                                    – {{ evento.hora_termino|time:"H:i" }}
+                                {% endif %}
+                            </div>
+                        {% elif evento.hora %}
+                            <div>
+                                <strong>Hora:</strong>
+                                {{ evento.hora|time:"H:i" }}
+                            </div>
+                        {% endif %}
+
+                        {% if evento.lugar %}
+                            <div>
+                                <strong>Lugar:</strong> {{ evento.lugar }}
+                            </div>
+                        {% endif %}
+
+                        {% if evento.direccion %}
+                            <div>
+                                <strong>Dirección:</strong> {{ evento.direccion }}
+                            </div>
+                        {% endif %}
+
+                        {% if evento.localidad %}
+                            <div>
+                                <strong>Localidad/comuna:</strong> {{ evento.localidad }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+
+            {% if evento.descripcion %}
+                <h2 class="ev-section-title">Descripción</h2>
+                <div class="ev-text">
+                    {{ evento.descripcion }}
+                </div>
+            {% endif %}
+        </article>
+
+        <!-- Columna derecha: compra / entradas -->
+        <aside class="ev-card">
+            <div class="ev-ticket-header">
+                <div>
+                    <div class="ev-ticket-title">Entradas</div>
+                    <div class="ev-ticket-desc">
+                        Cada usuario puede registrar hasta <strong>5 entradas</strong> para este evento.
+                    </div>
+                </div>
+            </div>
+
+            <table class="ev-ticket-table">
+                <thead>
+                    <tr>
+                        <th>Tipo de ticket</th>
+                        <th>Valor</th>
+                        <th style="width:120px;">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="ev-highlight">Entrada general</div>
+                            <div class="ev-small-note">
+                                Acceso al evento para una persona registrada.
+                            </div>
+                        </td>
+                        <td>
+                            {% if evento.precio_entrada == 0 %}
+                                Gratuito
+                            {% else %}
+                                ${{ evento.precio_entrada|floatformat:0 }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{% url 'events:asistir' evento.pk %}" method="get">
+                                <select name="cantidad" class="ev-input" id="id_cantidad">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+
+                                <div style="margin-top:10px; text-align:right;">
+                                    {% if not user.is_authenticated %}
+                                        <button type="button" class="ev-btn ev-btn-disabled">
+                                            Inicia sesión para comprar
+                                        </button>
+                                    {% elif evento.esta_finalizado %}
+                                        <button type="button" class="ev-btn ev-btn-disabled">
+                                            Evento finalizado
+                                        </button>
+                                    {% elif evento.cupos_disponibles is not None and evento.cupos_disponibles <= 0 %}
+                                        <button type="button" class="ev-btn ev-btn-disabled">
+                                            Sin cupos disponibles
+                                        </button>
+                                    {% elif evento.estado != "aprobado" %}
+                                        <button type="button" class="ev-btn ev-btn-disabled">
+                                            A la espera de aprobación
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="ev-btn ev-btn-primary">
+                                            Comprar entrada
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="ev-ticket-footer">
+                <div>
+                    Cupos disponibles:
+                    {% if evento.cupos_disponibles is None %}
+                        <strong>Sin límite definido</strong>
+                    {% else %}
+                        <strong>{{ evento.cupos_disponibles }}</strong>
+                        de {{ evento.cupos_totales }}
+                    {% endif %}
+                    {% if ya_inscrito and inscripcion_actual %}
+                        <br>
+                        Ya tienes registradas
+                        <strong>{{ inscripcion_actual.cantidad }}</strong> entrada(s)
+                        para este evento.
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="ev-small-note">
+                
+            </div>
+        </aside>
+
+    </div>
+</div>
+{% endblock %}

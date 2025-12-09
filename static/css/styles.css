@@ -1,0 +1,585 @@
+/* Reset rápido */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f5f7;
+    color: #222;
+}
+
+/* Navbar */
+.navbar {
+    background: #1f2933;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.navbar-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar-logo {
+    font-weight: 700;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.navbar-links {
+    margin-left: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex: 1;
+}
+
+.navbar-links a {
+    color: #cfd8e3;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.navbar-links a:hover {
+    color: #fff;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.navbar-username {
+    color: #cfd8e3;
+}
+
+.btn-link {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Main layout */
+.main-container {
+    max-width: 1100px;
+    margin: 1.5rem auto 2.5rem;
+    padding: 0 1rem;
+}
+
+/* Mensajes */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+
+.message {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.message-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.message-error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.message-info {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.message-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Hero */
+.hero {
+    margin-bottom: 1.5rem;
+}
+
+.hero-content h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.hero-content p {
+    margin: 0.3rem 0 0;
+    color: #4b5563;
+}
+
+/* Layout listado */
+.layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 800px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sidebar filtros */
+.sidebar {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+}
+
+.filtros-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.form-label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    gap: 0.25rem;
+}
+
+.form-input {
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.75rem;
+    border: 1px solid #d1d5db;
+    font-size: 0.9rem;
+    background: #ffffff;
+}
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.btn-disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Botones estilo wizard (crear evento) */
+.btn-outline {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+}
+
+.btn-outline:hover {
+    background: #f3f4f6;
+}
+
+.btn-wizard-next {
+    background: #fbbf24; /* amarillo */
+    color: #111827;
+}
+
+.btn-wizard-next:hover {
+    background: #f59e0b;
+}
+
+/* Grid de eventos */
+.content {
+    min-height: 200px;
+}
+
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.card-evento {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-evento-imagen {
+    height: 150px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-evento-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-evento-imagen-placeholder {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.card-evento-body {
+    padding: 0.75rem 0.9rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.card-evento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-evento-titulo {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.card-evento-descripcion {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.card-evento-info {
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.card-evento-info p {
+    margin: 0.15rem 0;
+}
+
+.card-evento-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+}
+
+.form-asistencia {
+    margin: 0;
+}
+
+/* Chip estado */
+.chip-estado {
+    padding: 0.15rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Colores por estado */
+.estado-pendiente {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.estado-aprobado {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.estado-rechazado {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.estado-finalizado {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.estado-sin-cupos {
+    background: #fee2e2;
+    color: #9f1239;
+}
+
+/* Detalle */
+.detalle-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detalle-card {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    padding: 1rem;
+}
+
+@media (max-width: 800px) {
+    .detalle-card {
+        grid-template-columns: 1fr;
+    }
+}
+
+.detalle-imagen {
+    background: #f3f4f6;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detalle-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detalle-imagen-placeholder {
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.detalle-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detalle-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.detalle-header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.detalle-descripcion {
+    margin: 0.25rem 0 0.5rem;
+    color: #374151;
+}
+
+.detalle-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.detalle-info-item h3 {
+    margin: 0 0 0.2rem;
+    font-size: 0.95rem;
+}
+
+.detalle-info-item p {
+    margin: 0;
+}
+
+.detalle-footer {
+    margin-top: 0.75rem;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 1rem 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+/* Textos de ayuda */
+.texto-ayuda {
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+/* -------- FORMULARIO CREAR EVENTO TIPO TARJETA -------- */
+
+.form-wizard {
+    max-width: 720px;
+    margin: 0 auto 2.5rem;
+}
+
+.form-wizard-card {
+    background: #ffffff;
+    border-radius: 1.5rem;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 18px 45px rgba(15,23,42,0.12);
+}
+
+.form-wizard-title {
+    margin: 0 0 1rem;
+    font-size: 1.35rem;
+}
+
+.wizard-section {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+.wizard-section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.section-title {
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+}
+
+.section-subtitle {
+    margin: 0 0 0.9rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.section-note {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.4rem;
+}
+
+/* Grilla para datos logísticos */
+.wizard-extra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.75rem 1rem;
+}
+
+/* Formulario genérico */
+.form-card,
+.form-wizard-card form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.75rem;
+    border: 1px solid #d1d5db;
+    font-size: 0.9rem;
+    background: #ffffff;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.form-error {
+    font-size: 0.8rem;
+    color: #b91c1c;
+}
+
+/* Checkboxes */
+.checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin: 0.35rem 0;
+}
+
+.checkbox-row input[type="checkbox"] {
+    margin-top: 0.15rem;
+}
+
+/* Footer del wizard */
+.wizard-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}

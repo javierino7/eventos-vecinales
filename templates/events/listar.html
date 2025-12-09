@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <!-- BARRA DE BÚSQUEDA / FILTROS -->
+    <form method="get" class="filter-bar">
+        <!-- Buscar -->
+        <div class="filter-bar__search">
+            <i class="fa fa-search"></i>
+            <input type="text"
+                   name="q"
+                   placeholder="Buscar eventos"
+                   value="{{ q|default_if_none:'' }}">
+        </div>
+
+        <!-- Localidad -->
+        <select name="localidad" class="filter-bar__select">
+            <option value="">Todas las localidades</option>
+            {% for loc in localidades %}
+                <option value="{{ loc }}"
+                        {% if loc == localidad_seleccionada %}selected{% endif %}>
+                    {{ loc }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Mis eventos (asistiendo) -->
+        <label class="filter-bar__checkbox">
+            <input type="checkbox"
+                   name="solo_mis_eventos"
+                   {% if solo_mis_eventos %}checked{% endif %}>
+            Solo eventos a los que asisto
+        </label>
+
+        <!-- Botón -->
+        <button type="submit" class="filter-bar__button">
+            Buscar
+        </button>
+    </form>
+
+    <!-- TITULO -->
+    <div class="events-header">
+        <h2>Próximos eventos</h2>
+    </div>
+
+    <!-- GRID DE EVENTOS -->
+    <div class="event-grid">
+        {% for evento in eventos %}
+            <article class="event-card event-card--{{ evento.estado_color }}">
+                <!-- Imagen -->
+                <div class="event-card__image-wrapper">
+                    {% if evento.imagen %}
+                        <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
+                    {% else %}
+                        <img src="{% static 'img/evento_default.jpg' %}" alt="Evento sin imagen">
+                    {% endif %}
+                </div>
+
+                <!-- Texto principal -->
+                <div class="event-card__body">
+                    <!-- Badge de estado (semáforo) -->
+                    <div class="event-card__status badge--{{ evento.estado_color }}">
+                        {{ evento.estado_texto }}
+                    </div>
+
+                    <div class="event-card__location">
+                        <i class="fa fa-map-marker-alt"></i>
+                        {{ evento.localidad }}
+                    </div>
+                    <h2 class="event-card__title">
+                        {{ evento.titulo }}
+                    </h2>
+                </div>
+
+                <!-- Fecha y hora -->
+                <div class="event-card__footer">
+                    <div class="event-card__date">
+                        <span class="day">{{ evento.fecha|date:"d" }}</span>
+                        <span class="month">{{ evento.fecha|date:"M" }}</span>
+                        <span class="year">{{ evento.fecha|date:"Y" }}</span>
+                    </div>
+                    <div class="event-card__time">
+                        <span class="hour">{{ evento.hora|time:"H" }}</span>
+                        <span class="minute">{{ evento.hora|time:"i" }}</span>
+                        <span class="label">hrs</span>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <p class="no-events">No hay eventos disponibles por ahora.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* FONDO GENERAL BLANCO (moderno) */
+    body {
+        background-color: #ffffff !important;
+    }
+
+    .page-wrapper{
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+    }
+
+    /* BARRa DE FILTROS */
+    .filter-bar{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        background-color: #f5f5f7;
+        padding: 12px 16px;
+        border-radius: 16px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .filter-bar__search{
+        flex: 1 1 220px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #ffffff;
+        border-radius: 999px;
+        padding: 8px 14px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .filter-bar__search i{
+        font-size: 14px;
+        color: #9ca3af;
+    }
+
+    .filter-bar__search input{
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 14px;
+        background: transparent;
+        color: #111827;
+    }
+
+    .filter-bar__select{
+        flex: 0 0 180px;
+        border-radius: 999px;
+        padding: 8px 12px;
+        border: 1px solid #e5e7eb;
+        background-color: #ffffff;
+        font-size: 14px;
+        color: #111827;
+    }
+
+    .filter-bar__checkbox{
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #4b5563;
+        white-space: nowrap;
+    }
+
+    .filter-bar__button{
+        border: none;
+        border-radius: 999px;
+        padding: 9px 18px;
+        background: linear-gradient(135deg, #111827, #1f2937);
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        flex: 0 0 auto;
+    }
+
+    .filter-bar__button:hover{
+        opacity: 0.9;
+    }
+
+    /* TITULO */
+    .events-header h2{
+        font-size: 22px;
+        font-weight: 700;
+        color: #111827;
+        margin: 16px 0 12px;
+    }
+
+    .no-events{
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    /* GRID */
+    .event-grid{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
+    }
+
+    /* CARD BASE */
+    .event-card{
+        background-color: #ffffff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border-top: 4px solid transparent;
+    }
+
+    /* COLORES SEGÚN ESTADO (SEMÁFORO) */
+    .event-card--danger{
+        border-top-color: #ef4444;
+    }
+
+    .event-card--warning{
+        border-top-color: #f59e0b;
+    }
+
+    .event-card--success{
+        border-top-color: #10b981;
+    }
+
+    .event-card__image-wrapper{
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .event-card__image-wrapper img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .event-card__body{
+        padding: 14px 16px 8px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* BADGE DE ESTADO */
+    .event-card__status{
+        align-self: flex-start;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .badge--danger{
+        background-color: rgba(239, 68, 68, 0.12);
+        color: #b91c1c;
+    }
+
+    .badge--warning{
+        background-color: rgba(245, 158, 11, 0.15);
+        color: #92400e;
+    }
+
+    .badge--success{
+        background-color: rgba(16, 185, 129, 0.15);
+        color: #065f46;
+    }
+
+    .event-card__location{
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 6px;
+        text-transform: none;
+    }
+
+    .event-card__location i{
+        font-size: 11px;
+    }
+
+    .event-card__title{
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    .event-card__footer{
+        padding: 10px 16px 14px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 12px;
+    }
+
+    .event-card__date{
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+    }
+
+    .event-card__date .day{
+        font-size: 22px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .event-card__date .month{
+        font-size: 13px;
+        text-transform: uppercase;
+        color: #4b5563;
+    }
+
+    .event-card__date .year{
+        font-size: 11px;
+        color: #9ca3af;
+    }
+
+    .event-card__time{
+        text-align: right;
+        line-height: 1.1;
+    }
+
+    .event-card__time .hour{
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .event-card__time .minute{
+        font-size: 11px;
+        font-weight: 600;
+        color: #111827;
+        margin-left: 2px;
+    }
+
+    .event-card__time .label{
+        font-size: 11px;
+        color: #6b7280;
+        display: block;
+        margin-top: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px){
+        .filter-bar{
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .filter-bar__select{
+            width: 100%;
+        }
+        .filter-bar__button{
+            width: 100%;
+            justify-content: center;
+        }
+        .filter-bar__checkbox{
+            justify-content: flex-start;
+        }
+    }
+</style>
+
+{% endblock %}

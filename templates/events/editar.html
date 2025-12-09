@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Editar evento · Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    .ev-hero { display:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="w3-text-white">Editar evento</h2>
+<p class="w3-text-grey w3-small">
+    Modifica los datos del evento y guarda los cambios.
+</p>
+
+<form method="post" enctype="multipart/form-data" class="w3-margin-top">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="w3-button ev-primary-btn">
+        <i class="fa fa-check"></i> Guardar cambios
+    </button>
+    <a href="{% url 'events:detalle' object.pk %}" class="w3-button ev-secondary-btn">
+        Cancelar
+    </a>
+</form>
+{% endblock %}

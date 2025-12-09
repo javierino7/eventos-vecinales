@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmación de asistencia | Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    .checkout-wrapper {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+    }
+
+    .checkout-card {
+        width: 100%;
+        max-width: 900px;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 24px 24px 20px;
+        box-shadow:
+            0 18px 45px rgba(15, 23, 42, 0.08),
+            0 0 0 1px rgba(148, 163, 184, 0.25);
+    }
+
+    .checkout-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .checkout-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 4px;
+    }
+
+    .checkout-subtitle {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .checkout-badge {
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .checkout-section-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+        margin: 12px 0 6px;
+    }
+
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+        gap: 18px;
+        margin-top: 8px;
+    }
+
+    @media (max-width: 780px) {
+        .checkout-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .checkout-block {
+        background: #f9fafb;
+        border-radius: 18px;
+        padding: 12px 14px;
+        font-size: 13px;
+        color: #4b5563;
+    }
+
+    .checkout-block-row {
+        margin-bottom: 8px;
+    }
+
+    .checkout-block-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .checkout-label {
+        display:block;
+        color: #6b7280;
+        margin-bottom: 2px;
+    }
+
+    .checkout-value {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .checkout-price-big {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .checkout-note {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 6px;
+    }
+
+    .checkout-footer {
+        margin-top: 18px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .ev-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 9px 18px;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, color 0.12s ease;
+        white-space: nowrap;
+    }
+
+    .ev-btn-primary {
+        background: #fbbf24;
+        color: #78350f;
+        box-shadow: 0 10px 24px rgba(245, 158, 11, 0.55);
+    }
+
+    .ev-btn-primary:hover {
+        background: #f59e0b;
+        transform: translateY(-1px);
+    }
+
+    .ev-btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+        box-shadow: none;
+    }
+
+    .ev-btn-secondary:hover {
+        background: #d1d5db;
+        transform: translateY(-1px);
+    }
+
+    .checkout-form .ev-field {
+        margin-bottom: 10px;
+    }
+
+    .checkout-form label {
+        display:flex;
+        justify-content:space-between;
+        font-size:13px;
+        color:#111827;
+        margin-bottom:3px;
+        font-weight:500;
+    }
+
+    .checkout-form input {
+        width:100%;
+        border-radius:10px;
+        border:1px solid #d1d5db;
+        padding:8px 10px;
+        font-size:13px;
+        box-sizing:border-box;
+    }
+
+    .checkout-form input:focus {
+        outline:none;
+        border-color:#facc15;
+        box-shadow:0 0 0 1px #facc15;
+    }
+
+    .checkout-error {
+        font-size: 11px;
+        color: #b91c1c;
+        margin-top: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-wrapper">
+    <section class="checkout-card">
+
+        <header class="checkout-header">
+            <div>
+                <h1 class="checkout-title">
+                    Confirmar asistencia
+                </h1>
+                <p class="checkout-subtitle">
+                    Revisa los datos del evento y completa tu información para registrar la inscripción.
+                </p>
+            </div>
+            <div>
+                <span class="checkout-badge">
+                    Paso 1 de 2
+                </span>
+            </div>
+        </header>
+
+        <div class="checkout-section-title">
+            Detalles del evento
+        </div>
+
+        <div class="checkout-grid">
+            <!-- Información del evento -->
+            <div class="checkout-block">
+                <div class="checkout-block-row">
+                    <span class="checkout-label">Evento</span>
+                    <span class="checkout-value">
+                        {{ evento.titulo }}
+                    </span>
+                </div>
+
+                {% if evento.fecha_inicio %}
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Fecha</span>
+                        <span class="checkout-value">
+                            {{ evento.fecha_inicio|date:"d/m/Y" }}
+                            {% if evento.fecha_termino and evento.fecha_termino != evento.fecha_inicio %}
+                                – {{ evento.fecha_termino|date:"d/m/Y" }}
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endif %}
+
+                {% if evento.hora_inicio %}
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Hora</span>
+                        <span class="checkout-value">
+                            {{ evento.hora_inicio|time:"H:i" }}
+                            {% if evento.hora_termino %}
+                                – {{ evento.hora_termino|time:"H:i" }}
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endif %}
+
+                {% if evento.lugar %}
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Lugar</span>
+                        <span class="checkout-value">
+                            {{ evento.lugar }}
+                        </span>
+                    </div>
+                {% endif %}
+
+                {% if evento.direccion %}
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Dirección</span>
+                        <span class="checkout-value">
+                            {{ evento.direccion }}
+                        </span>
+                    </div>
+                {% endif %}
+
+                {% if cupos_restantes is not None %}
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Cupos disponibles</span>
+                        <span class="checkout-value">
+                            {{ cupos_restantes }}
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Formulario de compra -->
+            <div class="checkout-block">
+                <form method="post" class="checkout-form">
+                    {% csrf_token %}
+                    {# mantenemos la cantidad elegida en un campo oculto #}
+                    <input type="hidden" name="cantidad" value="{{ cantidad }}">
+
+                    {% if form.non_field_errors %}
+                        <div class="checkout-error">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Cantidad de entradas</span>
+                        <span class="checkout-value">{{ cantidad }}</span>
+                    </div>
+
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Valor unitario</span>
+                        <span class="checkout-value">
+                            {% if evento.precio_entrada == 0 %}
+                                Gratuito
+                            {% else %}
+                                ${{ evento.precio_entrada|floatformat:0 }}
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="checkout-block-row">
+                        <span class="checkout-label">Total estimado</span>
+                        <span class="checkout-price-big">
+                            ${{ total|floatformat:0 }}
+                        </span>
+                    </div>
+
+                    <hr style="border:none; border-top:1px solid #e5e7eb; margin:10px 0;">
+
+                    <div class="ev-field">
+                        <label for="{{ form.nombre.id_for_label }}">Nombre y apellido</label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                            <div class="checkout-error">
+                                {% for error in form.nombre.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="ev-field">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="checkout-error">
+                                {% for error in form.email.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="ev-field">
+                        <label for="{{ form.email_confirmacion.id_for_label }}">Repetir email</label>
+                        {{ form.email_confirmacion }}
+                        {% if form.email_confirmacion.errors %}
+                            <div class="checkout-error">
+                                {% for error in form.email_confirmacion.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="ev-field">
+                        <label for="{{ form.telefono.id_for_label }}">Celular (opcional)</label>
+                        {{ form.telefono }}
+                        {% if form.telefono.errors %}
+                            <div class="checkout-error">
+                                {% for error in form.telefono.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <p class="checkout-note">
+                        Esta plataforma es parte de un proyecto académico. No se realizan cobros reales ni pagos en línea.
+                    </p>
+
+                    <div class="checkout-footer" style="margin-top:12px;">
+                        <a href="{% url 'events:detalle' evento.pk %}" class="ev-btn ev-btn-secondary">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="ev-btn ev-btn-primary">
+                            Pagar y registrar asistencia
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+</div>
+{% endblock %}

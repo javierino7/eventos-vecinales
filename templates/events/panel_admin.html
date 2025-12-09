@@ -1,0 +1,178 @@
+{# templates/events/panel_admin.html #}
+{% extends "base.html" %}
+
+{% block title %}Panel administrador{% endblock %}
+
+{% block content %}
+<div class="ev-container" style="max-width: 1100px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="margin-bottom: 1.5rem;">Panel de administración de eventos</h1>
+
+    {# ------------------ ACCIONES RÁPIDAS ------------------ #}
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; align-items: center;">
+        <a href="{% url 'events:crear' %}" class="ev-btn ev-btn-primary">
+            Crear nuevo evento
+        </a>
+
+        <a href="{% url 'accounts:admin_user_create' %}" class="ev-btn ev-btn-secondary">
+            Crear nuevo usuario
+        </a>
+
+        <a href="{% url 'accounts:admin_user_list' %}" class="ev-btn ev-btn-secondary">
+            Ver usuarios
+        </a>
+    </div>
+
+    {# ------------------ MÉTRICAS BÁSICAS ------------------ #}
+    <section style="margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 0.75rem;">Resumen rápido</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+            <div class="ev-card" style="padding: 1rem; border-radius: 0.75rem; background: #fff;">
+                <div style="font-size: 0.85rem; color: #6b7280;">Total de eventos</div>
+                <div style="font-size: 1.5rem; font-weight: 600;">
+                    {{ total_eventos|default:0 }}
+                </div>
+            </div>
+
+            <div class="ev-card" style="padding: 1rem; border-radius: 0.75rem; background: #fff;">
+                <div style="font-size: 0.85rem; color: #6b7280;">Eventos aprobados</div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: #16a34a;">
+                    {{ eventos_aprobados|default:0 }}
+                </div>
+            </div>
+
+            <div class="ev-card" style="padding: 1rem; border-radius: 0.75rem; background: #fff;">
+                <div style="font-size: 0.85rem; color: #6b7280;">Eventos pendientes</div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: #f97316;">
+                    {{ eventos_pendientes|length }}
+                </div>
+            </div>
+
+            <div class="ev-card" style="padding: 1rem; border-radius: 0.75rem; background: #fff;">
+                <div style="font-size: 0.85rem; color: #6b7280;">Eventos rechazados</div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: #dc2626;">
+                    {{ eventos_rechazados|default:0 }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ------------------ EVENTOS PENDIENTES ------------------ #}
+    <section style="margin-bottom: 2.5rem;">
+        <h2 style="margin-bottom: 0.75rem;">Eventos pendientes de revisión</h2>
+
+        {% if eventos_pendientes %}
+            <div style="border-radius: 0.75rem; background: #fff; padding: 1rem;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <th style="text-align: left; padding: 0.5rem;">Título</th>
+                            <th style="text-align: left; padding: 0.5rem;">Fecha inicio</th>
+                            <th style="text-align: left; padding: 0.5rem;">Localidad</th>
+                            <th style="text-align: left; padding: 0.5rem;">Creador</th>
+                            <th style="text-align: left; padding: 0.5rem;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in eventos_pendientes %}
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                                <td style="padding: 0.5rem;">
+                                    <a href="{% url 'events:detalle' e.pk %}">
+                                        {{ e.titulo }}
+                                    </a>
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    {{ e.fecha_inicio|date:"d/m/Y" }}
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    {{ e.localidad|default:"-" }}
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    {{ e.creado_por|default:"-" }}
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+                                        <a href="{% url 'events:cambiar_estado_evento' e.pk 'aprobado' %}"
+                                           class="ev-btn ev-btn-xs"
+                                           style="font-size: 0.75rem;">
+                                            Aprobar
+                                        </a>
+                                        <a href="{% url 'events:cambiar_estado_evento' e.pk 'rechazado' %}"
+                                           class="ev-btn ev-btn-xs"
+                                           style="font-size: 0.75rem;">
+                                            Rechazar
+                                        </a>
+                                        <a href="{% url 'events:cambiar_estado_evento' e.pk 'pendiente' %}"
+                                           class="ev-btn ev-btn-xs"
+                                           style="font-size: 0.75rem;">
+                                            Dejar pendiente
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No hay eventos pendientes.</p>
+        {% endif %}
+    </section>
+
+    {# ------------------ ÚLTIMOS EVENTOS CREADOS ------------------ #}
+    <section>
+        <h2 style="margin-bottom: 0.75rem;">Últimos eventos creados</h2>
+
+        {% if eventos_recientes %}
+            <div style="border-radius: 0.75rem; background: #fff; padding: 1rem;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #e5e7eb;">
+                            <th style="text-align: left; padding: 0.5rem;">Título</th>
+                            <th style="text-align: left; padding: 0.5rem;">Estado</th>
+                            <th style="text-align: left; padding: 0.5rem;">Fecha inicio</th>
+                            <th style="text-align: left; padding: 0.5rem;">Localidad</th>
+                            <th style="text-align: left; padding: 0.5rem;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in eventos_recientes %}
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                                <td style="padding: 0.5rem;">
+                                    <a href="{% url 'events:detalle' e.pk %}">
+                                        {{ e.titulo }}
+                                    </a>
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    {% if e.estado == "aprobado" %}
+                                        <span style="color: #16a34a;">Aprobado</span>
+                                    {% elif e.estado == "rechazado" %}
+                                        <span style="color: #dc2626;">Rechazado</span>
+                                    {% else %}
+                                        <span style="color: #f97316;">Pendiente</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    {{ e.fecha_inicio|date:"d/m/Y" }}
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    {{ e.localidad|default:"-" }}
+                                </td>
+                                <td style="padding: 0.5rem;">
+                                    <a href="{% url 'events:editar' e.pk %}"
+                                       class="ev-btn ev-btn-xs"
+                                       style="font-size: 0.75rem;">
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Todavía no hay eventos creados.</p>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

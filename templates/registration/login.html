@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Ingresar · Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Ocultar hero en la vista de login */
+    .ev-hero { display: none; }
+
+    .ev-main-wrapper {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .ev-main-card {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Card principal de login (tipo Passline) */
+    .ev-login-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
+        border: 1px solid #e5e7eb;
+        max-width: 460px;
+        width: 100%;
+        padding: 28px 26px 24px;
+    }
+
+    .ev-login-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    .ev-login-subtitle {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 20px;
+    }
+
+    .ev-login-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    /* Estilizar inputs usando name, así no tocamos el form en Python */
+    .ev-login-card input[name="username"],
+    .ev-login-card input[name="password"] {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        color: #111827;
+        background: #ffffff;
+        box-sizing: border-box;
+    }
+
+    .ev-login-card input[name="username"]:focus,
+    .ev-login-card input[name="password"]:focus {
+        outline: none;
+        border-color: #facc15;
+        box-shadow: 0 0 0 1px #facc15;
+    }
+
+    .ev-login-help {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .ev-login-error {
+        font-size: 0.8rem;
+        color: #b91c1c;
+        margin-top: 4px;
+    }
+
+    .ev-login-btn {
+        width: 100%;
+        margin-top: 18px;
+        padding: 10px 0;
+        border-radius: 999px;
+        border: none;
+        background: #facc15;
+        color: #111827;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+    }
+
+    .ev-login-btn:hover {
+        filter: brightness(0.95);
+    }
+
+    .ev-login-footer {
+        margin-top: 18px;
+        font-size: 0.8rem;
+        color: #6b7280;
+        text-align: center;
+    }
+
+    .ev-login-footer a {
+        color: #4f46e5;
+        text-decoration: none;
+    }
+
+    .ev-login-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="ev-login-card">
+
+    <h1 class="ev-login-title">Ingresar a tu cuenta</h1>
+    <p class="ev-login-subtitle">
+        Accede para crear y administrar tus eventos vecinales.
+    </p>
+
+    {% if form.errors %}
+        <div class="w3-panel w3-pale-red w3-leftbar w3-border-red" style="border-radius:10px;">
+            <p style="color:#000;">Usuario o contraseña incorrectos. Intenta nuevamente.</p>
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <label class="ev-login-label" for="{{ form.username.id_for_label }}">
+            Correo o nombre de usuario
+        </label>
+        {{ form.username }}
+        <div class="ev-login-help">
+            Ejemplo: juan.perez o juan@example.com
+        </div>
+        {% if form.username.errors %}
+            <div class="ev-login-error">
+                {% for error in form.username.errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="height:14px;"></div>
+
+        <label class="ev-login-label" for "{{ form.password.id_for_label }}">
+            Contraseña
+        </label>
+        {{ form.password }}
+        {% if form.password.errors %}
+            <div class="ev-login-error">
+                {% for error in form.password.errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="ev-login-btn">
+            Ingresar
+        </button>
+    </form>
+
+    <div class="ev-login-footer">
+        ¿Olvidaste tu contraseña?
+        <a href="#">Recupérala (opcional)</a>
+        <br>
+        ¿No tienes cuenta? Pídele a un administrador que te cree una.
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Crear usuario{% endblock %}
+
+{% block content %}
+
+<div style="max-width:520px;margin:0 auto;padding:24px 12px;">
+
+    <h2 style="font-size:22px;margin-bottom:4px;">Crear usuario</h2>
+    <p style="margin-top:0;color:#666;font-size:13px;">
+        Solo el administrador puede crear usuarios y asignarles un rol dentro de la plataforma.
+    </p>
+
+    {% if messages %}
+        <ul class="w3-ul">
+            {% for message in messages %}
+                <li class="w3-small w3-{{ message.tags }}">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" class="w3-card w3-padding" style="border-radius:12px;margin-top:12px;">
+        {% csrf_token %}
+
+        <div class="w3-section">
+            <label class="w3-small">Nombre de usuario</label>
+            <input type="text" name="username" class="w3-input w3-border"
+                   required maxlength="150"
+                   value="{{ request.POST.username }}">
+        </div>
+
+        <div class="w3-section">
+            <label class="w3-small">Correo electrónico</label>
+            <input type="email" name="email" class="w3-input w3-border"
+                   value="{{ request.POST.email }}">
+        </div>
+
+        <div class="w3-section">
+            <label class="w3-small">Rol</label>
+            <select name="rol" class="w3-select w3-border">
+                <option value="vecino" {% if request.POST.rol == "vecino" %}selected{% endif %}>
+                    Vecino
+                </option>
+                <option value="moderador" {% if request.POST.rol == "moderador" %}selected{% endif %}>
+                    Moderador
+                </option>
+                <option value="administrador" {% if request.POST.rol == "administrador" %}selected{% endif %}>
+                    Administrador
+                </option>
+            </select>
+        </div>
+
+        <div class="w3-section">
+            <label class="w3-small">Contraseña</label>
+            <input type="password" name="password1" class="w3-input w3-border" required>
+        </div>
+
+        <div class="w3-section">
+            <label class="w3-small">Repetir contraseña</label>
+            <input type="password" name="password2" class="w3-input w3-border" required>
+        </div>
+
+        <div class="w3-section" style="display:flex;gap:8px;justify-content:flex-end;">
+            <a href="{% url 'events:panel_admin' %}"
+               class="w3-button w3-white w3-border"
+               style="border-radius:6px;">
+                Cancelar
+            </a>
+            <button type="submit"
+                    class="w3-button w3-amber"
+                    style="border-radius:6px;">
+                Crear usuario
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

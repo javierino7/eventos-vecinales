@@ -1,0 +1,15 @@
+:root{
+  /* paleta sobria */
+  --bs-body-bg: #0f1115;       /* fondo */
+  --bs-body-color: #e6e6e6;    /* texto */
+  --brand-accent: #2ea56a;     /* acento verde */
+}
+
+/* ajustar algo de contraste cómodo */
+.btn-success{
+  background-color: var(--brand-accent);
+  border-color: var(--brand-accent);
+}
+.btn-success:hover{
+  filter: brightness(0.95);
+}

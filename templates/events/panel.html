@@ -1,0 +1,96 @@
+{# templates/events/panel.html #}
+{% extends "base.html" %}
+
+{% block title %}Panel de eventos - Eventos Vecinales{% endblock %}
+
+{% block content %}
+<div class="page-layout">
+  <header class="page-header">
+    <div class="page-header__titles">
+      <h1 class="page-title">Panel de eventos</h1>
+      <p class="page-subtitle">
+        Administra los eventos pendientes, aprobados y rechazados.
+      </p>
+    </div>
+    <span class="page-chip page-chip--accent">Moderador</span>
+  </header>
+
+  {# === BARRA DE BÚSQUEDA (CON filtro de estado) === #}
+  {% include "events/_event_search_bar.html" with mostrar_filtro_estado=True %}
+
+  <section class="panel-table-wrapper">
+    {% if eventos %}
+      <table class="panel-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Ubicación</th>
+            <th>Estado</th>
+            <th>Creador</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for evento in eventos %}
+            <tr>
+              <td>
+                <a href="{% url 'events:detalle' evento.pk %}" class="panel-link">
+                  {{ evento.titulo }}
+                </a>
+              </td>
+              <td>{{ evento.fecha|date:"d/m/Y" }}</td>
+              <td>{{ evento.hora|time:"H:i" }}</td>
+              <td>{{ evento.ubicacion }}</td>
+              <td>
+                <span class="chip chip--state chip--state-{{ evento.estado }}">
+                  {{ evento.get_estado_display }}
+                </span>
+              </td>
+              <td>{{ evento.creado_por }}</td>
+              <td class="panel-actions">
+                <a href="{% url 'events:detalle' evento.pk %}" class="ev-btn-link">Ver</a>
+
+                {% if evento.estado == "pendiente" %}
+                  <form method="post" action="{% url 'events:aprobar' evento.pk %}" class="panel-inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="ev-btn-small ev-btn-primary">Aprobar</button>
+                  </form>
+                  <form method="post" action="{% url 'events:rechazar' evento.pk %}" class="panel-inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="ev-btn-small ev-btn-danger">Rechazar</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="events-empty">
+        No se encontraron eventos con esos criterios de búsqueda.
+      </p>
+    {% endif %}
+  </section>
+
+  {# Paginación #}
+  {% if is_paginated %}
+    <nav class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if estado %}&estado={{ estado }}{% endif %}"
+           class="pagination__link">Anterior</a>
+      {% endif %}
+
+      <span class="pagination__current">
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if estado %}&estado={{ estado }}{% endif %}"
+           class="pagination__link">Siguiente</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+</div>
+{% endblock %}

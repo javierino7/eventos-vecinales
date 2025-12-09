@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% block title %}Crear evento · Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Ocultar hero general en esta vista */
+    .ev-hero { display: none; }
+
+    .ev-main-wrapper {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .ev-main-card {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Card principal tipo Passline */
+    .ev-create-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e5e7eb;
+        max-width: 900px;
+        width: 100%;
+        padding: 28px 28px 24px;
+    }
+
+    .ev-section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    .ev-section-subtitle {
+        font-size: 0.9rem;
+        color: #4b5563;
+        margin-bottom: 16px;
+    }
+
+    .ev-divider {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 22px 0;
+    }
+
+    .ev-field {
+        margin-bottom: 18px;
+    }
+
+    .ev-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #111827;
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+
+    .ev-label span.ev-optional {
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-weight: 400;
+    }
+
+    .ev-help {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .ev-error {
+        font-size: 0.78rem;
+        color: #b91c1c;
+        margin-top: 4px;
+    }
+
+    /* Inputs similares a los del ejemplo */
+    .ev-create-form input[type="text"],
+    .ev-create-form input[type="number"],
+    .ev-create-form input[type="date"],
+    .ev-create-form input[type="time"],
+    .ev-create-form select,
+    .ev-create-form textarea {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        color: #111827;
+        background: #ffffff;
+        box-sizing: border-box;
+    }
+
+    .ev-create-form textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .ev-create-form input:focus,
+    .ev-create-form select:focus,
+    .ev-create-form textarea:focus {
+        outline: none;
+        border-color: #facc15;
+        box-shadow: 0 0 0 1px #facc15;
+    }
+
+    .ev-create-form input[type="file"] {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        background: #f9fafb;
+    }
+
+    /* Restricciones / checkboxes */
+    .ev-checkbox-row {
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ev-checkbox-row input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #facc15;
+    }
+
+    .ev-checkbox-row span {
+        line-height: 1.3;
+    }
+
+    /* Acciones abajo */
+    .ev-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .ev-btn-secondary {
+        padding: 9px 24px;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        background: #ffffff;
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    .ev-btn-secondary:hover {
+        background: #f3f4f6;
+    }
+
+    .ev-btn-primary {
+        padding: 9px 28px;
+        border-radius: 999px;
+        border: none;
+        background: #facc15;  /* amarillo tipo ejemplo */
+        color: #111827;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    .ev-btn-primary:hover {
+        filter: brightness(0.95);
+    }
+
+    @media (max-width: 600px) {
+        .ev-create-card {
+            padding: 20px 16px 18px;
+            border-radius: 16px;
+        }
+        .ev-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+        .ev-actions button,
+        .ev-actions a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="ev-create-card">
+
+    {# Errores generales del formulario #}
+    {% if form.non_field_errors %}
+        <div class="w3-panel w3-pale-red w3-leftbar w3-border-red" style="border-radius:10px;">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="ev-create-form">
+        {% csrf_token %}
+
+        <!-- INFORMACIÓN BÁSICA -->
+        <h3 class="ev-section-title">Información básica</h3>
+        <p class="ev-section-subtitle">
+            Utiliza un título interesante que describa de la mejor manera tu evento y completa los datos principales.
+        </p>
+
+        <div class="ev-field">
+            <label class="ev-label" for="{{ form.titulo.id_for_label }}">
+                <span>Título del evento</span>
+            </label>
+            {{ form.titulo }}
+            {% if form.titulo.errors %}
+                <div class="ev-error">
+                    {% for error in form.titulo.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="ev-help">Ejemplo: “Feria de emprendedores del barrio”, “Taller de fútbol para niños”.</div>
+        </div>
+
+        <div class="ev-field">
+            <label class="ev-label" for="{{ form.localidad.id_for_label }}">
+                <span>Localidad / sector</span>
+            </label>
+            {{ form.localidad }}
+            {% if form.localidad.errors %}
+                <div class="ev-error">
+                    {% for error in form.localidad.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="ev-field">
+            <label class="ev-label" for="{{ form.direccion.id_for_label }}">
+                <span>Dirección del evento</span>
+            </label>
+            {{ form.direccion }}
+            {% if form.direccion.errors %}
+                <div class="ev-error">
+                    {% for error in form.direccion.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="ev-help">Incluye calle, número y alguna referencia si es necesario.</div>
+        </div>
+
+        <div class="w3-row-padding" style="padding:0; margin:0 -4px;">
+            <div class="w3-half" style="padding:0 4px;">
+                <div class="ev-field">
+                    <label class="ev-label" for="{{ form.fecha.id_for_label }}">
+                        <span>Fecha</span>
+                    </label>
+                    {{ form.fecha }}
+                    {% if form.fecha.errors %}
+                        <div class="ev-error">
+                            {% for error in form.fecha.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="w3-half" style="padding:0 4px;">
+                <div class="ev-field">
+                    <label class="ev-label" for="{{ form.hora.id_for_label }}">
+                        <span>Hora</span>
+                    </label>
+                    {{ form.hora }}
+                    {% if form.hora.errors %}
+                        <div class="ev-error">
+                            {% for error in form.hora.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="w3-row-padding" style="padding:0; margin:0 -4px;">
+            <div class="w3-half" style="padding:0 4px;">
+                <div class="ev-field">
+                    <label class="ev-label" for="{{ form.cupos_totales.id_for_label }}">
+                        <span>Cupos totales</span>
+                    </label>
+                    {{ form.cupos_totales }}
+                    {% if form.cupos_totales.errors %}
+                        <div class="ev-error">
+                            {% for error in form.cupos_totales.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="ev-help">Número máximo de personas que pueden asistir.</div>
+                </div>
+            </div>
+            <div class="w3-half" style="padding:0 4px;">
+                <div class="ev-field">
+                    <label class="ev-label" for="{{ form.estado.id_for_label }}">
+                        <span>Estado del evento</span>
+                    </label>
+                    {{ form.estado }}
+                    {% if form.estado.errors %}
+                        <div class="ev-error">
+                            {% for error in form.estado.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <hr class="ev-divider">
+
+        <!-- INFORMACIÓN COMPLEMENTARIA -->
+        <h3 class="ev-section-title">Información complementaria</h3>
+        <p class="ev-section-subtitle">
+            Agrega una descripción del evento: qué se realizará, beneficios, a quién va dirigido y cualquier detalle importante.
+        </p>
+
+        <div class="ev-field">
+            <label class="ev-label" for="{{ form.descripcion.id_for_label }}">
+                <span>Descripción del evento</span>
+                <span class="ev-optional">(Opcional si tu docente lo permite)</span>
+            </label>
+            {{ form.descripcion }}
+            {% if form.descripcion.errors %}
+                <div class="ev-error">
+                    {% for error in form.descripcion.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <hr class="ev-divider">
+
+        <!-- IMAGEN DEL EVENTO -->
+        <h3 class="ev-section-title">Imagen del evento</h3>
+        <p class="ev-section-subtitle">
+            Sube una imagen representativa del evento. Esto ayuda a que se vea más atractivo en la lista de eventos.
+        </p>
+
+        <div class="ev-field">
+            <label class="ev-label" for="{{ form.imagen.id_for_label }}">
+                <span>Archivo de imagen</span>
+            </label>
+            {{ form.imagen }}
+            {% if form.imagen.errors %}
+                <div class="ev-error">
+                    {% for error in form.imagen.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="ev-help">
+                Tamaño sugerido 800×800, peso máx. aprox. 4&nbsp;MB. Formatos recomendados: JPG, PNG.
+            </div>
+        </div>
+
+        <hr class="ev-divider">
+
+       
+
+       
+
+        <!-- BOTONES ABAJO -->
+        <div class="ev-actions">
+            <a href="{% url 'events:listar' %}" class="ev-btn-secondary">
+                ANTERIOR
+            </a>
+            <button type="submit" class="ev-btn-primary">
+                SIGUIENTE
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

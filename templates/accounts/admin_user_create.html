@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Crear usuario (admin){% endblock %}
+
+{% block content %}
+<div class="ev-container" style="max-width: 700px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="margin-bottom: 1.5rem;">Crear nuevo usuario</h1>
+
+    <p style="margin-bottom: 1rem; color: #4b5563;">
+        Completa los datos del usuario y selecciona el rol:
+        <strong>Vecino</strong>, <strong>Moderador</strong> o <strong>Administrador</strong>.
+    </p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {# errores generales del formulario #}
+        {% if form.non_field_errors %}
+            <div style="margin-bottom: 1rem; padding: 0.75rem; border-radius: 0.5rem; background: #fee2e2; color: #b91c1c;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+            <div>
+                <label for="{{ form.username.id_for_label }}" style="display:block; font-weight:600; margin-bottom:0.25rem;">
+                    {{ form.username.label }}
+                </label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div style="color:#b91c1c; font-size:0.85rem;">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.email.id_for_label }}" style="display:block; font-weight:600; margin-bottom:0.25rem;">
+                    {{ form.email.label }}
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div style="color:#b91c1c; font-size:0.85rem;">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.password1.id_for_label }}" style="display:block; font-weight:600; margin-bottom:0.25rem;">
+                    {{ form.password1.label }}
+                </label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <div style="color:#b91c1c; font-size:0.85rem;">{{ form.password1.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.password2.id_for_label }}" style="display:block; font-weight:600; margin-bottom:0.25rem;">
+                    {{ form.password2.label }}
+                </label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <div style="color:#b91c1c; font-size:0.85rem;">{{ form.password2.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.rol.id_for_label }}" style="display:block; font-weight:600; margin-bottom:0.25rem;">
+                    {{ form.rol.label }}
+                </label>
+                {{ form.rol }}
+                {% if form.rol.errors %}
+                    <div style="color:#b91c1c; font-size:0.85rem;">{{ form.rol.errors }}</div>
+                {% endif %}
+                <p style="font-size:0.8rem; color:#6b7280; margin-top:0.25rem;">
+                    • Vecino: sin permisos especiales.<br>
+                    • Moderador: puede administrar eventos.<br>
+                    • Administrador: permisos completos.
+                </p>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+                {{ form.is_active }}
+                <label for="{{ form.is_active.id_for_label }}" style="font-weight:500;">
+                    {{ form.is_active.label }}
+                </label>
+                {% if form.is_active.errors %}
+                    <div style="color:#b91c1c; font-size:0.85rem;">{{ form.is_active.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="margin-top: 1.75rem; display:flex; gap:0.75rem;">
+            <button type="submit" class="ev-btn ev-btn-primary">
+                Guardar usuario
+            </button>
+            <a href="{% url 'events:panel_admin' %}" class="ev-btn ev-btn-secondary">
+                Cancelar y volver al panel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

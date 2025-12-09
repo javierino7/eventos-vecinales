@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Crear usuario - Panel de administración{% endblock %}
+
+{% block content %}
+<div class="w3-row" style="margin-top:32px;">
+    <div class="w3-col l3 m2 s1"><!-- espacio --></div>
+
+    <div class="w3-col l6 m8 s10">
+        <div class="w3-card w3-white" style="border-radius:8px; padding:24px 24px 20px;">
+            <h2 style="margin:0 0 4px; font-size:22px;">
+                Crear nuevo usuario
+            </h2>
+            <p style="margin:0 0 16px; color:#555; font-size:13px;">
+                Completa los datos para crear una cuenta y asignar un rol dentro de la plataforma.
+            </p>
+
+            {# MENSAJES DJANGO #}
+            {% if messages %}
+                <div style="margin-bottom:16px;">
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            <div class="w3-padding-small w3-margin-bottom"
+                                 style="border-radius:4px; font-size:13px; background:#fdecea; color:#b71c1c;">
+                                {{ message }}
+                            </div>
+                        {% elif message.tags == 'success' %}
+                            <div class="w3-padding-small w3-margin-bottom"
+                                 style="border-radius:4px; font-size:13px; background:#e8f5e9; color:#1b5e20;">
+                                {{ message }}
+                            </div>
+                        {% else %}
+                            <div class="w3-padding-small w3-margin-bottom"
+                                 style="border-radius:4px; font-size:13px; background:#e3f2fd; color:#0d47a1;">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="w3-margin-top">
+                {% csrf_token %}
+
+                <!-- USERNAME -->
+                <div class="w3-margin-bottom">
+                    <label for="id_username" class="w3-small">Nombre de usuario</label>
+                    <input type="text"
+                           name="username"
+                           id="id_username"
+                           class="w3-input w3-border"
+                           required>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="w3-margin-bottom">
+                    <label for="id_email" class="w3-small">Correo electrónico</label>
+                    <input type="email"
+                           name="email"
+                           id="id_email"
+                           class="w3-input w3-border"
+                           required>
+                </div>
+
+                <!-- ROL -->
+                <div class="w3-margin-bottom">
+                    <label for="id_rol" class="w3-small">Rol</label>
+                    <select name="rol"
+                            id="id_rol"
+                            class="w3-select w3-border"
+                            required>
+                        <option value="" disabled selected>Selecciona un rol</option>
+                        <option value="vecino">Vecino</option>
+                        <option value="moderador">Moderador</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                    <p style="margin:4px 0 0; font-size:11px; color:#777;">
+                        El rol determina los permisos dentro del sistema.
+                    </p>
+                </div>
+
+                <!-- PASSWORD 1 -->
+                <div class="w3-margin-bottom">
+                    <label for="id_password1" class="w3-small">Contraseña</label>
+                    <input type="password"
+                           name="password1"
+                           id="id_password1"
+                           class="w3-input w3-border"
+                           required>
+                </div>
+
+                <!-- PASSWORD 2 -->
+                <div class="w3-margin-bottom">
+                    <label for="id_password2" class="w3-small">Repetir contraseña</label>
+                    <input type="password"
+                           name="password2"
+                           id="id_password2"
+                           class="w3-input w3-border"
+                           required>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="w3-margin-top"
+                     style="display:flex; justify-content:flex-end; gap:8px;">
+                    <a href="{% url 'events:panel_admin' %}"
+                       class="w3-button w3-border"
+                       style="border-radius:4px;">
+                        Cancelar
+                    </a>
+                    <button type="submit"
+                            class="w3-button ev-primary-btn"
+                            style="border-radius:4px;">
+                        Crear usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="w3-center" style="margin-top:12px;">
+            <a href="{% url 'events:panel_admin' %}" class="w3-small">
+                Volver al panel de administración
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

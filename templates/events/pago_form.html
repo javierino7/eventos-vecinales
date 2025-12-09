@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Editar evento{% else %}Crear evento{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-6 py-8">
+  <h1 class="text-3xl font-semibold mb-6">{% if object %}Editar evento{% else %}Crear evento{% endif %}</h1>
+
+  {% if form.non_field_errors %}
+    <div class="mb-4 rounded border border-red-200 bg-red-50 text-red-800 px-4 py-3">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <form method="post" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {% csrf_token %}
+
+    <div class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium mb-1">Título</label>
+        {{ form.titulo }}
+        {% if form.titulo.errors %}<p class="text-red-600 text-sm mt-1">{{ form.titulo.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Descripción</label>
+        {{ form.descripcion }}
+        {% if form.descripcion.errors %}<p class="text-red-600 text-sm mt-1">{{ form.descripcion.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Ubicación</label>
+        {{ form.lugar }}
+        {% if form.lugar.errors %}<p class="text-red-600 text-sm mt-1">{{ form.lugar.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium mb-1">Fecha</label>
+        {{ form.fecha }}
+        <p class="text-xs text-slate-500 mt-1">{{ form.fields.fecha.help_text }}</p>
+        {% if form.fecha.errors %}<p class="text-red-600 text-sm mt-1">{{ form.fecha.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Cupos (opcional)</label>
+        {{ form.cupos }}
+        <p class="text-xs text-slate-500 mt-1">{{ form.fields.cupos.help_text }}</p>
+        {% if form.cupos.errors %}<p class="text-red-600 text-sm mt-1">{{ form.cupos.errors.0 }}</p>{% endif %}
+      </div>
+    </div>
+
+    <div class="md:col-span-2 flex gap-3 pt-2">
+      <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
+      <a href="{% url 'events:listar' %}" class="px-4 py-2 rounded border hover:bg-slate-50">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

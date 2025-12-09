@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Registrarse{% endblock %}
+
+{% block content %}
+<div class="w3-row-padding w3-margin-top">
+  <div class="w3-col l4 m3 s12"></div>
+
+  <div class="w3-col l4 m6 s12">
+    <div class="w3-card w3-white w3-padding">
+      <h2>Crear cuenta</h2>
+
+      <form method="post" class="w3-margin-top">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="w3-button w3-theme w3-round" style="width:100%; margin-top:10px;">
+          Registrarme
+        </button>
+      </form>
+
+      <p class="w3-small w3-margin-top">
+        ¿Ya tienes cuenta?
+        <a href="{% url 'accounts:login' %}">Inicia sesión aquí</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

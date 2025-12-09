@@ -1,0 +1,36 @@
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+/* Navbar */
+.nv-navbar .nv-logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+/* Form logout dentro del navbar */
+.nv-logout-form {
+  display: inline-block;
+  margin: 0;
+}
+
+/* Tarjetas de eventos */
+.nv-card {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.nv-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+/* Descripción resumida */
+.nv-descripcion-resumen {
+  min-height: 48px;
+}
+
+/* Barra de búsqueda */
+.nv-search-bar {
+  border-radius: 8px;
+}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Eventos pendientes · Panel admin{% endblock %}
+
+{% block page_header %}
+<header class="w3-margin-bottom">
+    <h2 class="w3-text-theme">
+        <i class="fa fa-clock"></i>
+        Eventos pendientes de revisión
+    </h2>
+    <p class="w3-text-grey">
+        Esta vista se puede completar más adelante con la lista de eventos
+        que necesitan aprobación del administrador.
+    </p>
+</header>
+{% endblock %}
+
+{% block search_bar %}
+{# Aquí tampoco mostramos el buscador de eventos principal #}
+{% endblock %}
+
+{% block content %}
+<div class="w3-panel w3-pale-blue w3-leftbar w3-border-blue">
+    <p>Placeholder: aún no se ha implementado la lógica de moderación. Puedes dejar esto así para la entrega y completarlo luego.</p>
+</div>
+{% endblock %}

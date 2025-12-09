@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ evento.titulo }} | Detalle del evento{% endblock %}
+
+{% block content %}
+
+<div class="w3-container" style="padding:32px 0; background:#f5f6fa; min-height:calc(100vh - 80px);">
+    <div class="w3-content" style="max-width:1100px;">
+
+        <!-- Tarjeta principal -->
+        <div class="w3-row-padding">
+
+            <!-- Columna izquierda: tarjeta del evento -->
+            <div class="w3-col l4 m12 s12">
+                <div class="w3-card-4" style="border-radius:18px; overflow:hidden;">
+
+                    <!-- Imagen o placeholder -->
+                    {% if evento.imagen %}
+                        <div style="height:220px; overflow:hidden; background:#f5f5f5;">
+                            <img src="{{ evento.imagen.url }}"
+                                 alt="{{ evento.titulo }}"
+                                 style="width:100%; height:100%; object-fit:cover;">
+                        </div>
+                    {% else %}
+                        <div class="w3-center" style="height:220px; background:linear-gradient(135deg,#ff9a9e,#fecfef);">
+                            <i class="fa fa-calendar" style="font-size:60px; color:white; margin-top:70px;"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Info básica -->
+                    <div class="w3-container" style="padding:18px 22px 12px 22px;">
+                        <h4 style="margin:0 0 4px 0; font-weight:600;">
+                            {{ evento.titulo }}
+                        </h4>
+
+                        <p class="w3-small w3-text-grey" style="margin:0 0 10px 0;">
+                            <i class="fa fa-calendar-o"></i>
+                            {{ evento.fecha|date:"d/m/Y" }}
+                            &nbsp;&nbsp;
+                            <i class="fa fa-clock-o"></i>
+                            {{ evento.fecha|time:"H:i" }}
+                        </p>
+
+                        <p class="w3-small w3-text-grey" style="margin:0 0 6px 0;">
+                            <i class="fa fa-map-marker"></i>
+                            {{ evento.direccion }},
+                            {{ evento.comuna }}, {{ evento.region }}
+                        </p>
+
+                        <!-- Estado -->
+                        <p style="margin:10px 0 0 0;">
+                            {% if evento.estado == "aprobado" %}
+                                <span class="w3-tag w3-round"
+                                      style="background:#00c853; color:white; font-size:11px; padding:4px 10px;">
+                                    <i class="fa fa-check"></i> Aprobado
+                                </span>
+                            {% elif evento.estado == "pendiente" %}
+                                <span class="w3-tag w3-round"
+                                      style="background:#ffa000; color:white; font-size:11px; padding:4px 10px;">
+                                    <i class="fa fa-clock-o"></i> Pendiente de revisión
+                                </span>
+                            {% else %}
+                                <span class="w3-tag w3-round w3-red"
+                                      style="font-size:11px; padding:4px 10px;">
+                                    {{ evento.get_estado_display }}
+                                </span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Columna derecha: descripción, inscripción, acciones -->
+            <div class="w3-col l8 m12 s12">
+                <div class="w3-card-4" style="border-radius:18px; overflow:hidden;">
+
+                    <!-- Descripción -->
+                    <div class="w3-container" style="padding:22px 28px 10px 28px;">
+                        <h3 style="margin-top:4px; margin-bottom:12px; font-weight:600;">
+                            Descripción del evento
+                        </h3>
+                        <p style="margin-bottom:16px; white-space:pre-line;">
+                            {{ evento.descripcion }}
+                        </p>
+
+                        <p class="w3-small w3-text-grey" style="margin-top:0;">
+                            Organizado por:
+                            <strong>{{ evento.creado_por.username }}</strong>
+                        </p>
+                    </div>
+
+                    <!-- Bloque participación -->
+                    <div class="w3-container"
+                         style="padding:16px 28px; background:#f8f8f8; border-top:1px solid #eee;">
+
+                        <h5 style="margin-top:0; margin-bottom:10px;">
+                            <i class="fa fa-ticket"></i> Participar en este evento
+                        </h5>
+
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'events:inscribirse' evento.pk %}">
+                                {% csrf_token %}
+
+                                {% if user in evento.asistentes.all %}
+                                    <p class="w3-text-green w3-small" style="margin-bottom:8px;">
+                                        <i class="fa fa-check-circle"></i>
+                                        Ya estás inscrito en este evento.
+                                    </p>
+                                    <button type="submit"
+                                            formaction="{% url 'events:cancelar_inscripcion' evento.pk %}"
+                                            class="w3-button w3-round-large w3-small"
+                                            style="background:#fff; border:1px solid #e53935; color:#e53935;">
+                                        <i class="fa fa-times"></i> Cancelar inscripción
+                                    </button>
+                                {% else %}
+                                    <button type="submit"
+                                            class="w3-button w3-round-large w3-small"
+                                            style="background:#000; color:#fff; padding:8px 18px;">
+                                        <i class="fa fa-check"></i> Inscribirse al evento
+                                    </button>
+                                {% endif %}
+                            </form>
+                        {% else %}
+                            <p class="w3-small w3-text-grey" style="margin-top:12px;">
+                                <a href="{% url 'login' %}">Inicia sesión</a> para inscribirte en este evento.
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Acciones de organizador -->
+                    <div class="w3-container" style="padding:16px 28px 10px 28px;">
+                        {% if user.is_authenticated %}
+                            {% if user == evento.creado_por or user.rol == "administrador" or user.is_staff or user.is_superuser %}
+                                <hr style="border-color:#eee; margin-top:0; margin-bottom:10px;">
+                                <p class="w3-small w3-text-grey" style="margin-bottom:8px;">
+                                    Acciones de organizador:
+                                </p>
+                                <p>
+                                    <a href="{% url 'events:editar' evento.pk %}"
+                                       class="w3-button w3-round-large w3-small"
+                                       style="border:1px solid #d4d4d4; background:#fff; margin-right:6px;">
+                                        <i class="fa fa-pencil"></i> Editar
+                                    </a>
+                                    <a href="{% url 'events:eliminar' evento.pk %}"
+                                       class="w3-button w3-round-large w3-small w3-red">
+                                        <i class="fa fa-trash"></i> Eliminar
+                                    </a>
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Asistentes -->
+                    <div class="w3-container" style="padding:10px 28px 18px 28px;">
+                        <hr style="border-color:#eee; margin-top:4px; margin-bottom:10px;">
+                        <p class="w3-small w3-text-grey" style="margin-bottom:6px;">
+                            ASISTENTES ({{ evento.asistentes.count }})
+                        </p>
+                        {% if evento.asistentes.exists %}
+                            {% for asistente in evento.asistentes.all %}
+                                <span class="w3-tag w3-round-small"
+                                      style="background:#e3f2fd; color:#0d47a1; margin:2px 3px; font-size:11px;">
+                                    {{ asistente.username }}
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            <p class="w3-small w3-text-grey">
+                                Aún no hay asistentes inscritos.
+                            </p>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

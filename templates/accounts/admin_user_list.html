@@ -1,0 +1,71 @@
+{# templates/accounts/admin_user_list.html #}
+{% extends "base.html" %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block content %}
+<div class="ev-container" style="max-width: 900px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="margin-bottom: 1.5rem;">Usuarios</h1>
+
+    <div style="margin-bottom: 1rem;">
+        <a href="{% url 'accounts:admin_user_create' %}" class="ev-btn ev-btn-primary">
+            Crear nuevo usuario
+        </a>
+        <a href="{% url 'events:panel_admin' %}" class="ev-btn ev-btn-secondary">
+            Volver al panel de eventos
+        </a>
+    </div>
+
+    {% if usuarios %}
+        <div style="border-radius: 0.75rem; background: #fff; padding: 1rem;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <th style="text-align: left; padding: 0.5rem;">Usuario</th>
+                        <th style="text-align: left; padding: 0.5rem;">Correo</th>
+                        <th style="text-align: left; padding: 0.5rem;">Rol</th>
+                        <th style="text-align: left; padding: 0.5rem;">Fecha nac.</th>
+                        <th style="text-align: left; padding: 0.5rem;">Activo</th>
+                        <th style="text-align: left; padding: 0.5rem;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                        <tr style="border-bottom: 1px solid #f3f4f6;">
+                            <td style="padding: 0.5rem;">{{ u.username }}</td>
+                            <td style="padding: 0.5rem;">{{ u.email|default:"-" }}</td>
+                            <td style="padding: 0.5rem;">
+                                {{ u.rol|default:"-" }}
+                                {% if u.is_superuser %}(superuser){% elif u.is_staff %}(staff){% endif %}
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                {% if u.fecha_nacimiento %}
+                                    {{ u.fecha_nacimiento|date:"d/m/Y" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                {% if u.is_active %}
+                                    Sí
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <a href="{% url 'accounts:admin_user_edit' u.pk %}"
+                                   class="ev-btn ev-btn-xs"
+                                   style="font-size: 0.75rem;">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No hay usuarios creados.</p>
+    {% endif %}
+</div>
+{% endblock %}

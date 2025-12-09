@@ -1,0 +1,405 @@
+/* Paleta clara, estilo moderno/minimalista */
+
+:root {
+    --color-bg: #f5f5f7;
+    --color-card: #ffffff;
+    --color-border-soft: #e5e7eb;
+    --color-primary: #fbbf24;
+    --color-primary-strong: #f59e0b;
+    --color-primary-soft: #fef3c7;
+    --color-text-main: #111827;
+    --color-text-muted: #6b7280;
+    --color-chip: #e5e7eb;
+
+    --radius-card: 18px;
+    --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* Aseguramos fondo general claro */
+body {
+    background: var(--color-bg);
+}
+
+/* Layout general */
+
+.page-wrapper {
+    padding: 32px 16px 48px;
+}
+
+.eventos-header {
+    max-width: 1200px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.eventos-titulo {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    margin: 0 0 4px 0;
+}
+
+.eventos-subtitulo {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+/* Grid principal: filtros + listado */
+
+.eventos-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 900px) {
+    .eventos-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tarjetas base */
+
+.card {
+    background: var(--color-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+/* -------- Filtros -------- */
+
+.filtros-card {
+    padding: 20px 18px 18px;
+}
+
+.filtros-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.filtros-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-main);
+}
+
+.link-reset {
+    font-size: 13px;
+    color: var(--color-primary-strong);
+    text-decoration: none;
+}
+
+.link-reset:hover {
+    text-decoration: underline;
+}
+
+.filtros-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--color-text-main);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--color-border-soft);
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+    background: #f9fafb;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--color-primary-strong);
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2);
+    background: #ffffff;
+}
+
+.form-check {
+    font-size: 13px;
+    color: var(--color-text-main);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-check input {
+    margin-right: 6px;
+}
+
+/* Botones */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease, color 0.1s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-primario {
+    background: var(--color-primary);
+    color: #78350f;
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.35);
+}
+
+.btn-primario:hover {
+    background: var(--color-primary-strong);
+    transform: translateY(-1px);
+}
+
+.btn-secundario {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-secundario:hover {
+    background: #d1d5db;
+}
+
+.btn-terciario {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.btn-terciario:hover {
+    background: #e0e7ff;
+}
+
+.btn-disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* -------- Grid de eventos -------- */
+
+.eventos-contenido {
+    min-width: 0;
+}
+
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjeta de evento */
+
+.card-evento {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-evento-imagen-wrapper {
+    position: relative;
+    height: 170px;
+    overflow: hidden;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    background: #e5e7eb;
+}
+
+.card-evento img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-evento-imagen-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+}
+
+/* Badges */
+
+.badge {
+    position: absolute;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    backdrop-filter: blur(6px);
+}
+
+/* Estado del evento */
+
+.badge-estado {
+    left: 10px;
+    top: 10px;
+}
+
+.badge-estado--aprobado {
+    background: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+}
+
+.badge-estado--pendiente {
+    background: rgba(234, 179, 8, 0.12);
+    color: #ca8a04;
+}
+
+.badge-estado--rechazado {
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+}
+
+/* Tiempo para el evento */
+
+.badge-tiempo {
+    right: 10px;
+    top: 10px;
+}
+
+/* Colores según models.css_clase_tiempo */
+
+.badge-tiempo--pasado {
+    background: rgba(107, 114, 128, 0.18);
+    color: #4b5563;
+}
+
+.badge-tiempo--hoy {
+    background: rgba(248, 113, 113, 0.16);
+    color: #b91c1c;
+}
+
+.badge-tiempo--muy-pronto {
+    background: rgba(249, 115, 22, 0.16);
+    color: #c2410c;
+}
+
+.badge-tiempo--esta-semana {
+    background: rgba(250, 204, 21, 0.16);
+    color: #854d0e;
+}
+
+.badge-tiempo--mas-adelante {
+    background: rgba(34, 197, 94, 0.14);
+    color: #15803d;
+}
+
+.badge-tiempo--sin-fecha {
+    background: rgba(59, 130, 246, 0.13);
+    color: #1d4ed8;
+}
+
+/* Contenido de la tarjeta */
+
+.card-evento-body {
+    padding: 14px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-evento-titulo {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-main);
+}
+
+.card-evento-descripcion {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+}
+
+/* Datos (fecha, hora, lugar, etc.) */
+
+.card-evento-datos {
+    margin: 4px 0 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+}
+
+.card-evento-datos .dato {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.card-evento-datos dt {
+    font-weight: 600;
+    color: #374151;
+}
+
+.card-evento-datos dd {
+    margin: 0;
+    text-align: right;
+    color: var(--color-text-muted);
+}
+
+/* Acciones */
+
+.card-evento-actions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* Estado vacío */
+
+.card-vacio {
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.card-vacio h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+}
+
+.card-vacio p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}

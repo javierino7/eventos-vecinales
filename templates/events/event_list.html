@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio | Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    .ev-home-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 24px 60px;
+    }
+
+    .ev-layout {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+        .ev-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Panel izquierdo (filtros / búsqueda) */
+    .ev-filter-card {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 18px 18px 16px;
+        box-shadow:
+            0 14px 32px rgba(15, 23, 42, 0.10),
+            0 0 0 1px rgba(148, 163, 184, 0.30);
+    }
+
+    .ev-filter-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 10px;
+    }
+
+    .ev-filter-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .ev-search-input {
+        width: 100%;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        padding: 9px 13px;
+        font-size: 13px;
+        outline: none;
+        background: #f9fafb;
+        margin-bottom: 10px;
+    }
+
+    .ev-search-input:focus {
+        border-color: #fbbf24;
+        background: #ffffff;
+        box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.25);
+    }
+
+    .ev-select {
+        width: 100%;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        padding: 8px 12px;
+        font-size: 13px;
+        background: #f9fafb;
+        outline: none;
+        margin-bottom: 10px;
+    }
+
+    .ev-checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #4b5563;
+        margin: 4px 0 12px;
+    }
+
+    .ev-btn-search {
+        width: 100%;
+        border-radius: 999px;
+        border: none;
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        background: #111827;
+        color: #f9fafb;
+        cursor: pointer;
+        transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s;
+    }
+
+    .ev-btn-search:hover {
+        background: #020617;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.35);
+    }
+
+    /* Columna derecha: listado de eventos */
+    .ev-events-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 10px;
+    }
+
+    .ev-home-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .ev-results-count {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .ev-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 18px;
+    }
+
+    .ev-card {
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+            0 10px 25px rgba(15, 23, 42, 0.08),
+            0 0 0 1px rgba(148, 163, 184, 0.30);
+        transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .ev-card:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 18px 40px rgba(15, 23, 42, 0.18),
+            0 0 0 1px rgba(148, 163, 184, 0.45);
+    }
+
+    .ev-card-header {
+        width: 100%;
+        padding-top: 55%;
+        background: #e5e7eb;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ev-card-header img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .ev-card-body {
+        padding: 10px 14px 8px;
+    }
+
+    .ev-card-location {
+        font-size: 11px;
+        text-transform: lowercase;
+        color: #6b7280;
+    }
+
+    .ev-card-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-top: 2px;
+        text-transform: uppercase;
+        color: #111827;
+    }
+
+    .ev-card-meta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 6px;
+        font-size: 11px;
+        color: #6b7280;
+    }
+
+    .ev-badge-tiempo {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 2px 9px;
+        font-size: 10px;
+        border: 1px solid #e5e7eb;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        background: #f9fafb;
+        color: #4b5563;
+    }
+
+    .ev-badge-tiempo--hoy {
+        border-color: #bbf7d0;
+        background: #ecfdf5;
+        color: #166534;
+    }
+
+    .ev-badge-tiempo--pronto {
+        border-color: #fde68a;
+        background: #fffbeb;
+        color: #92400e;
+    }
+
+    .ev-badge-tiempo--finalizado {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    .ev-card-footer {
+        padding: 8px 14px 10px;
+        border-top: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #9ca3af;
+    }
+
+    /* Si quieres usar los colores de estado_tiempo_clase (Bootstrap) */
+    .ev-card.border-danger.bg-danger-subtle { border-width: 1px; }
+    .ev-card.border-success.bg-success-subtle { border-width: 1px; }
+    .ev-card.border-warning.bg-warning-subtle { border-width: 1px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ev-home-wrapper">
+
+    <div class="ev-layout">
+
+        <!-- Columna izquierda: filtros -->
+        <aside>
+            <form method="get" class="ev-filter-card">
+                <div class="ev-filter-title">Buscar evento</div>
+
+                <label class="ev-filter-label" for="id_q">Nombre o descripción</label>
+                <input
+                    id="id_q"
+                    type="text"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    class="ev-search-input"
+                    placeholder="Ej: campeonato, bingo, taller..."
+                >
+
+                <label class="ev-filter-label" for="id_localidad">Localidad</label>
+                <select id="id_localidad" name="localidad" class="ev-select">
+                    <option value="">Todas las localidades</option>
+                    {% for loc in localidades_disponibles %}
+                        <option value="{{ loc }}" {% if request.GET.localidad == loc %}selected{% endif %}>
+                            {{ loc }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label class="ev-checkbox-row">
+                    <input type="checkbox" name="solo_mis_eventos" value="1"
+                           {% if request.GET.solo_mis_eventos %}checked{% endif %}>
+                    Solo eventos a los que asisto
+                </label>
+
+                <button type="submit" class="ev-btn-search">
+                    Buscar
+                </button>
+            </form>
+        </aside>
+
+        <!-- Columna derecha: tarjetas de eventos -->
+        <section>
+            <header class="ev-events-header">
+                <h1 class="ev-home-title">Próximos eventos</h1>
+                <span class="ev-results-count">
+                    {% with lista_eventos=eventos|default:object_list %}
+                        {% if lista_eventos %}
+                            {{ lista_eventos|length }} evento(s) encontrado(s)
+                        {% else %}
+                            Sin resultados
+                        {% endif %}
+                    {% endwith %}
+                </span>
+            </header>
+
+            {% with lista_eventos=eventos|default:object_list %}
+                {% if lista_eventos %}
+                    <div class="ev-cards-grid">
+                        {% for evento in lista_eventos %}
+                            <a href="{% url 'events:detalle' evento.id %}"
+                               class="ev-card {{ evento.estado_tiempo_clase }}">
+                                <div class="ev-card-header">
+                                    {% if evento.imagen %}
+                                        <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}">
+                                    {% endif %}
+                                </div>
+
+                                <div class="ev-card-body">
+                                    <div class="ev-card-location">
+                                        {% if evento.lugar %}
+                                            {{ evento.lugar|lower }}
+                                        {% elif evento.localidad %}
+                                            {{ evento.localidad|lower }}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="ev-card-title">
+                                        {{ evento.titulo }}
+                                    </div>
+
+                                    <div class="ev-card-meta-row">
+                                        <span class="
+                                            ev-badge-tiempo
+                                            {% if evento.estado_tiempo == 'hoy' %}ev-badge-tiempo--hoy{% endif %}
+                                            {% if evento.estado_tiempo == 'pronto' %}ev-badge-tiempo--pronto{% endif %}
+                                            {% if evento.estado_tiempo == 'finalizado' %}ev-badge-tiempo--finalizado{% endif %}
+                                        ">
+                                            {{ evento.texto_tiempo }}
+                                        </span>
+
+                                        {% if evento.fecha_inicio %}
+                                            <span>
+                                                {{ evento.fecha_inicio|date:"d/m" }}
+                                                {% if evento.hora_inicio %}
+                                                    · {{ evento.hora_inicio|time:"H:i" }} hrs
+                                                {% elif evento.hora %}
+                                                    · {{ evento.hora|time:"H:i" }} hrs
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="ev-card-footer">
+                                    <span>
+                                        {% if evento.cupos_disponibles is None %}
+                                            Cupos sin límite
+                                        {% else %}
+                                            {{ evento.cupos_disponibles }} de {{ evento.cupos_totales }} cupos
+                                        {% endif %}
+                                    </span>
+                                    <span>
+                                        {% if evento.precio_entrada == 0 %}
+                                            Gratuito
+                                        {% else %}
+                                            ${{ evento.precio_entrada|floatformat:0 }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="margin-top:16px; font-size:14px; color:#6b7280;">
+                        No hay eventos disponibles con los filtros actuales.
+                    </p>
+                {% endif %}
+            {% endwith %}
+        </section>
+
+    </div>
+
+</div>
+{% endblock %}

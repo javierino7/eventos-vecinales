@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar evento{% endblock %}
+{% block content %}
+  <div class="rounded-lg border bg-white p-6 max-w-xl">
+    <h1 class="text-xl font-semibold mb-2">Eliminar evento</h1>
+    <p>¿Seguro que deseas eliminar <strong>{{ object.titulo }}</strong>?</p>
+    <form method="post" class="mt-4 flex gap-2">
+      {% csrf_token %}
+      <button class="px-3 py-2 rounded bg-red-600 text-white hover:bg-red-700">Eliminar</button>
+      <a href="{{ object.get_absolute_url }}" class="px-3 py-2 rounded border hover:bg-slate-50">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}

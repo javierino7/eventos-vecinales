@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Eliminar evento · Eventos Vecinales{% endblock %}
+
+{% block extra_head %}
+<style>
+    .ev-hero { display:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="w3-text-white">Eliminar evento</h2>
+<p class="w3-text-grey">
+    ¿Estás seguro de que quieres eliminar el evento
+    <strong>{{ object.titulo }}</strong>? Esta acción no se puede deshacer.
+</p>
+
+<form method="post" class="w3-margin-top">
+    {% csrf_token %}
+    <button type="submit" class="w3-button w3-red">
+        <i class="fa fa-trash"></i> Sí, eliminar
+    </button>
+    <a href="{% url 'events:detalle' object.pk %}" class="w3-button ev-secondary-btn">
+        Cancelar
+    </a>
+</form>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de moderación{% endblock %}
+
+{% block content %}
+<h2 class="w3-margin-top">Panel de moderación</h2>
+<p class="w3-text-grey w3-small">
+  Revisa los eventos que están pendientes de aprobación.
+</p>
+
+{% if eventos %}
+  <div class="w3-responsive w3-margin-top">
+    <table class="w3-table-all w3-hoverable w3-small">
+      <tr class="w3-theme">
+        <th>Título</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Dirección</th>
+        <th>Estado</th>
+      </tr>
+      {% for evento in eventos %}
+        <tr>
+          <td>
+            <a href="{% url 'events:detalle' evento.pk %}">
+              {{ evento.titulo }}
+            </a>
+          </td>
+          <td>{{ evento.fecha|date:"d/m/Y" }}</td>
+          <td>{{ evento.hora|time:"H:i" }}</td>
+          <td>
+            {{ evento.direccion }}{% if evento.localidad %}, {{ evento.localidad }}{% endif %}
+          </td>
+          <td>{{ evento.get_estado_display }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% else %}
+  <p class="w3-margin-top">No hay eventos pendientes por ahora.</p>
+{% endif %}
+{% endblock %}

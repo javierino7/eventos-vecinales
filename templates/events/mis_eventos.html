@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Mis eventos{% endblock %}
+
+{% block content %}
+<div class="w3-container w3-padding-32" style="max-width: 1200px; margin: 0 auto;">
+
+    <h2 class="w3-margin-bottom">Mis eventos</h2>
+
+    {% if eventos %}
+        <div class="event-grid">
+            {% for evento in eventos %}
+                <div class="event-card w3-card w3-round-large">
+                    <a href="{% url 'events:detalle' evento.pk %}" class="event-card-link">
+
+                        {% if evento.imagen %}
+                            <div class="event-image-wrapper">
+                                <img src="{{ evento.imagen.url }}" alt="{{ evento.titulo }}" class="event-image">
+                            </div>
+                        {% endif %}
+
+                        <div class="event-card-body">
+                            <h3 class="event-title">{{ evento.titulo }}</h3>
+
+                            <div class="event-status-row">
+                                {% if evento.texto_estado %}
+                                    <span class="event-status-badge {{ evento.color_estado }}">
+                                        {{ evento.texto_estado }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <p class="event-date">
+                                {{ evento.fecha|date:"d \\de F \\de Y" }}
+                                {% if evento.hora %}
+                                    · {{ evento.hora|time:"H:i" }}
+                                {% endif %}
+                            </p>
+
+                            <p class="event-meta">
+                                <span class="meta-label">Dirección:</span>
+                                {{ evento.direccion|default:"Sin dirección" }}
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="w3-text-grey">
+            No tienes eventos en los que estés inscrito todavía.
+        </p>
+    {% endif %}
+</div>
+
+<style>
+    .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .event-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
+    }
+
+    .event-card {
+        background: #ffffff;
+        overflow: hidden;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .event-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .event-image-wrapper {
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .event-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-card-body {
+        padding: 12px 14px 14px;
+    }
+
+    .event-title {
+        margin: 0 0 4px 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+
+    .event-status-row {
+        margin-bottom: 4px;
+    }
+
+    .event-status-badge {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-red {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .badge-yellow {
+        background: #fff8e1;
+        color: #f9a825;
+    }
+
+    .badge-green {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .badge-grey {
+        background: #eceff1;
+        color: #546e7a;
+    }
+
+    .event-date {
+        margin: 0 0 4px 0;
+        font-size: 0.85rem;
+        color: #757575;
+    }
+
+    .event-meta {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #616161;
+    }
+
+    .meta-label {
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

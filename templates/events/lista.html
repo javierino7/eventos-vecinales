@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Eventos vecinales{% endblock %}
+
+{% block content %}
+
+<div class="w3-container ev-page-container" style="margin-top:24px;">
+    <h3 style="margin-bottom:16px;">Próximos eventos</h3>
+
+    <div class="w3-row-padding">
+        {% for evento in eventos %}
+            <div class="w3-col l3 m4 s12" style="margin-bottom:20px;">
+                <div class="w3-card-4 ev-event-card">
+
+                    <div class="ev-event-banner">
+                        {% if evento.imagen %}
+                            <img src="{{ evento.imagen.url }}"
+                                 alt="{{ evento.titulo }}"
+                                 class="ev-event-banner-img">
+                        {% else %}
+                            <div class="ev-event-banner-placeholder">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="w3-container" style="padding:12px 14px 14px 14px;">
+                        <h5 style="margin:0 0 6px 0; font-weight:600; font-size:16px;">
+                            <a href="{% url 'events:detalle' evento.pk %}" style="text-decoration:none; color:#111827;">
+                                {{ evento.titulo }}
+                            </a>
+                        </h5>
+
+                        <p class="w3-small w3-text-grey" style="margin:0 0 4px 0;">
+                            <i class="fa fa-calendar"></i>
+                            {{ evento.fecha|date:"d/m/Y" }}
+                        </p>
+
+                        {% if evento.comuna or evento.region %}
+                            <p class="w3-tiny w3-text-grey" style="margin:0;">
+                                <i class="fa fa-map-marker"></i>
+                                {% if evento.comuna %}{{ evento.comuna }}, {% endif %}
+                                {% if evento.region %}{{ evento.region }}{% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No hay eventos para mostrar.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

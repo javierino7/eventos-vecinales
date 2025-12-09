@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block content %}
+<div class="card">
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+    <h2 class="card-title">Usuarios</h2>
+    {% if user.is_superuser or user.role == "admin" %}
+      <a class="btn btn--primary" href="{% url 'accounts:crear_usuario' %}">Nuevo usuario</a>
+    {% endif %}
+  </div>
+
+  <div style="overflow:auto; margin-top:10px">
+    <table style="width:100%; border-collapse:collapse">
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #e5e7eb">Usuario</th>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #e5e7eb">Email</th>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #e5e7eb">Rol</th>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #e5e7eb">Activo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <td style="padding:10px; border-bottom:1px solid #f1f5f9">{{ u.username }}</td>
+            <td style="padding:10px; border-bottom:1px solid #f1f5f9">{{ u.email|default:"—" }}</td>
+            <td style="padding:10px; border-bottom:1px solid #f1f5f9">{{ u.role|default:"—" }}</td>
+            <td style="padding:10px; border-bottom:1px solid #f1f5f9">{{ u.is_active|yesno:"Sí,No" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" style="padding:12px" class="muted">No hay usuarios.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

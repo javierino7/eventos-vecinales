@@ -1,0 +1,376 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Eventos Vecinales{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+
+    <style>
+        /* ---------- RESET BÁSICO ---------- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Helvetica, Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+        a {
+            color: inherit;
+        }
+
+        /* ---------- NAVBAR PRINCIPAL ---------- */
+
+        .ev-nav {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(12px);
+            background: rgba(248, 250, 252, 0.85);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+        }
+
+        .ev-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .ev-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            min-width: 0;
+        }
+
+        .ev-nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .ev-nav-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 20%, #fef3c7, #fbbf24 40%, #f97316 75%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #78350f;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.55);
+        }
+
+        .ev-nav-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ev-nav-brand-title {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            color: #111827;
+        }
+
+        .ev-nav-brand-subtitle {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .ev-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 8px;
+        }
+
+        .ev-nav-link {
+            position: relative;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            text-decoration: none;
+            color: #4b5563;
+            transition: background 0.12s ease, color 0.12s ease;
+        }
+
+        .ev-nav-link:hover {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .ev-nav-link.is-active {
+            background: #111827;
+            color: #f9fafb;
+        }
+
+        /* DERECHA: usuario + botones */
+
+        .ev-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ev-nav-user {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            font-size: 11px;
+            line-height: 1.25;
+        }
+
+        .ev-nav-user-name {
+            font-size: 12px;
+            color: #111827;
+        }
+
+        .ev-btn-sm {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 7px 14px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, color 0.12s ease;
+            white-space: nowrap;
+        }
+
+        .ev-btn-sm:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .ev-btn-primary {
+            background: #fbbf24;
+            color: #78350f;
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.45);
+        }
+
+        .ev-btn-primary:hover {
+            background: #f59e0b;
+            transform: translateY(-1px);
+        }
+
+        .ev-btn-ghost {
+            background: transparent;
+            color: #111827;
+            border: 1px solid rgba(148, 163, 184, 0.65);
+        }
+
+        .ev-btn-ghost:hover {
+            background: #111827;
+            color: #f9fafb;
+        }
+
+        /* RESPONSIVE NAV */
+
+        @media (max-width: 720px) {
+            .ev-nav-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .ev-nav-left {
+                justify-content: space-between;
+                width: 100%;
+            }
+            .ev-nav-links {
+                margin-left: 0;
+            }
+            .ev-nav-right {
+                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
+            .ev-nav-user {
+                align-items: flex-start;
+            }
+        }
+
+        /* ---------- CONTENIDO PRINCIPAL ---------- */
+
+        .ev-main-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 18px 16px 32px;
+        }
+
+        /* ---------- MENSAJES DJANGO ---------- */
+
+        .ev-messages {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ev-message {
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+
+        .ev-message--success {
+            background: #ecfdf3;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .ev-message--error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .ev-message--warning {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fef3c7;
+        }
+
+        .ev-message--info {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* ---------- FOOTER ---------- */
+
+        .ev-footer {
+            border-top: 1px solid rgba(148, 163, 184, 0.35);
+            background: #f9fafb;
+        }
+
+        .ev-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .ev-footer-hint {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 720px) {
+            .ev-footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+<header class="ev-nav">
+    <div class="ev-nav-inner">
+        <div class="ev-nav-left">
+            <a href="{% url 'events:listar' %}" class="ev-nav-brand">
+                <span class="ev-nav-logo">EV</span>
+                <span class="ev-nav-brand-text">
+                    <span class="ev-nav-brand-title">Eventos Vecinales</span>
+                    <span class="ev-nav-brand-subtitle">Tu comunidad, en un solo lugar</span>
+                </span>
+            </a>
+
+            <nav class="ev-nav-links">
+                <a href="{% url 'events:listar' %}"
+                   class="ev-nav-link {% if request.resolver_match.url_name == 'listar' %}is-active{% endif %}">
+                    Inicio
+                </a>
+
+                <a href="{% url 'events:crear' %}"
+                   class="ev-nav-link {% if request.resolver_match.url_name == 'crear' %}is-active{% endif %}">
+                    Crear evento
+                </a>
+
+                {# Panel administrador: solo roles administrador o moderador #}
+                {% if request.user.is_authenticated %}
+                    {% if request.user.rol == 'administrador' or request.user.rol == 'moderador' %}
+                        <a href="{% url 'admin:index' %}"
+                           class="ev-nav-link"
+                           target="_blank">
+                            Panel administrador
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </nav>
+        </div>
+
+        <div class="ev-nav-right">
+            {% if request.user.is_authenticated %}
+                <div class="ev-nav-user">
+                    <span class="ev-nav-user-name">
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </span>
+                </div>
+
+                <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="ev-btn-sm ev-btn-ghost">
+                        Cerrar sesión
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="ev-btn-sm ev-btn-primary">
+                    Iniciar sesión
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="ev-main-shell">
+    {% if messages %}
+        <div class="ev-messages">
+            {% for message in messages %}
+                <div class="ev-message ev-message--{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="ev-footer">
+    <div class="ev-footer-inner">
+        <span>© {% now "Y" %} Eventos Vecinales</span>
+        <span class="ev-footer-hint">Proyecto académico desarrollado con Django</span>
+    </div>
+</footer>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

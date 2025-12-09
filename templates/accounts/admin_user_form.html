@@ -1,0 +1,84 @@
+{# templates/accounts/admin_user_form.html #}
+{% extends "base.html" %}
+
+{% block title %}
+  {% if object %}Editar usuario{% else %}Crear nuevo usuario{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="ev-container" style="max-width: 600px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="margin-bottom: 1.5rem;">
+        {% if object %}Editar usuario{% else %}Crear nuevo usuario{% endif %}
+    </h1>
+
+    <p style="margin-bottom: 1rem; color: #4b5563;">
+        Completa los datos del usuario y selecciona el rol:
+        <strong>Vecino</strong>, <strong>Moderador</strong> o <strong>Administrador</strong>.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div style="display: grid; gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+                <label for="{{ form.username.id_for_label }}">Nombre de usuario</label>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+
+            <div>
+                <label for="{{ form.email.id_for_label }}">Correo electrónico</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+
+            <div>
+                <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de nacimiento</label>
+                {{ form.fecha_nacimiento }}
+                {{ form.fecha_nacimiento.errors }}
+            </div>
+
+            {% if form.password1 %}
+                <div>
+                    <label for="{{ form.password1.id_for_label }}">Contraseña</label>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </div>
+
+                <div>
+                    <label for="{{ form.password2.id_for_label }}">Confirmar contraseña</label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </div>
+            {% endif %}
+
+            <div>
+                <label for="{{ form.rol.id_for_label }}">Rol</label>
+                {{ form.rol }}
+                {{ form.rol.errors }}
+                <p style="font-size: 0.8rem; color: #6b7280; margin-top: 0.25rem;">
+                    • Vecino: sin permisos especiales.<br>
+                    • Moderador: puede administrar eventos.<br>
+                    • Administrador: permisos completos.
+                </p>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                {{ form.is_active }}
+                <label for="{{ form.is_active.id_for_label }}">Usuario activo</label>
+                {{ form.is_active.errors }}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="ev-btn ev-btn-primary">
+                Guardar usuario
+            </button>
+            <a href="{% url 'accounts:admin_user_list' %}" class="ev-btn ev-btn-secondary">
+                Cancelar y volver al listado
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
